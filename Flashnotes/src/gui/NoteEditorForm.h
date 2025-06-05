@@ -1,5 +1,11 @@
 #pragma once
 
+
+#using <System.dll>
+#using <System.Windows.Forms.dll>
+#using <System.Drawing.dll>
+
+
 #include <controllers/NotesController.hpp>
 
 using namespace System;

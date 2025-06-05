@@ -39,3 +39,8 @@ set_target_properties(FlashnotesGUI PROPERTIES
 
 # Explicitly add /clr and enable asynchronous exceptions with /EHa
 target_compile_options(FlashnotesGUI PRIVATE /clr /EHa)
+
+
+# Mark each source as managed to avoid C++/CLI parsing issues
+set_source_files_properties(${SOURCES} PROPERTIES COMPILE_FLAGS "/clr")
+
