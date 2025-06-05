@@ -1,5 +1,8 @@
 #include "FileManagerForm.h"
-#include <msclr/marshal_cppstd.h>
+#using <System.dll>
+#using <System.Windows.Forms.dll>
+#using <System.Drawing.dll>
+
 
 namespace FlashnotesGUI {
 
