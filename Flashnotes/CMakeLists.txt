@@ -51,6 +51,10 @@ add_library(controllers
 target_include_directories(controllers PUBLIC include)
 target_link_libraries(controllers services)
 
+if(MSVC)
+    add_subdirectory(src/gui)
+endif()
+
 add_executable(flashnotes src/main.cpp)
 target_link_libraries(flashnotes controllers domain utils services)
 
