@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#define UNIT_TEST
 #include "services/FileService.hpp"
 #include "services/JsonPersistenceService.hpp"
 #include <filesystem>
