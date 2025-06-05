@@ -34,6 +34,9 @@ target_include_directories(utils PUBLIC include)
 
 add_library(services
     src/services/JsonPersistenceService.cpp
+    src/services/NotesService.cpp
+    src/services/FileService.cpp
+    src/services/FlashcardService.cpp
 )
 target_include_directories(services PUBLIC include)
 target_link_libraries(services domain utils nlohmann_json::nlohmann_json)
