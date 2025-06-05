@@ -2,6 +2,13 @@ if(NOT MSVC)
     return()
 endif()
 
+# Remove default /RTC1 runtime checks which conflict with /clr
+foreach(flag_var
+    CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+    CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+    string(REPLACE "/RTC1" "" ${flag_var} "${${flag_var}}")
+endforeach()
+
 set(SOURCES
     Program.cpp
     MainWindow.cpp
@@ -26,9 +33,6 @@ set_target_properties(FlashnotesGUI PROPERTIES
     COMMON_LANGUAGE_RUNTIME ""
 )
 
+# Explicitly add /clr for MSVC
+target_compile_options(FlashnotesGUI PRIVATE /clr)
 
-# Explicitly add /clr for MSVC and disable /RTC1 which conflicts with /clr
-target_compile_options(FlashnotesGUI PRIVATE
-    /clr
-    $<$<CONFIG:Debug>:/RTC->
-)

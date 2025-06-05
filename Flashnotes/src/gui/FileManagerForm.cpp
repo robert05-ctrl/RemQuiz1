@@ -4,7 +4,6 @@
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
 
-
 namespace FlashnotesGUI {
 
 FileManagerForm::FileManagerForm(flashnotes::FileController* ctrl)
