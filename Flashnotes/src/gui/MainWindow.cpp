@@ -1,7 +1,9 @@
 #include "MainWindow.h"
+
 #using <System.dll>
 #using <System.Windows.Forms.dll>
 #using <System.Drawing.dll>
+
 
 namespace FlashnotesGUI {
 
@@ -32,6 +34,7 @@ void MainWindow::initMenu()
     filesItem->Click += gcnew EventHandler(this, &MainWindow::onOrganiseFiles);
     flashItem->Click += gcnew EventHandler(this, &MainWindow::onFlashcards);
     menu->Items->AddRange(gcnew cli::array<ToolStripItem^>{notesItem, filesItem, flashItem});
+
 }
 
 void MainWindow::loadControl(UserControl^ c)
