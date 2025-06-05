@@ -2,12 +2,15 @@ if(NOT MSVC)
     return()
 endif()
 
+
 # Remove default /RTC1 runtime checks and /EHsc which conflict with /clr
+
 foreach(flag_var
     CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
     CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
     string(REPLACE "/RTC1" "" ${flag_var} "${${flag_var}}")
     string(REPLACE "/EHsc" "" ${flag_var} "${${flag_var}}")
+
 endforeach()
 
 set(SOURCES
