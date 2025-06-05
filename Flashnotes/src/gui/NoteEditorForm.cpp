@@ -12,6 +12,7 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     Dock = DockStyle::Fill;
 
     noteTitle = gcnew TextBox();
+
     noteTitle->Dock = DockStyle::Top;
 
     noteBody = gcnew TextBox();
