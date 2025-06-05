@@ -42,11 +42,20 @@ target_include_directories(services PUBLIC include)
 target_link_libraries(services domain utils nlohmann_json::nlohmann_json)
 target_compile_definitions(services PUBLIC UNIT_TEST)
 
+add_library(controllers
+    src/controllers/AppController.cpp
+    src/controllers/NotesController.cpp
+    src/controllers/FileController.cpp
+    src/controllers/FlashcardController.cpp
+)
+target_include_directories(controllers PUBLIC include)
+target_link_libraries(controllers services)
+
 add_executable(flashnotes src/main.cpp)
-target_link_libraries(flashnotes domain utils services)
+target_link_libraries(flashnotes controllers domain utils services)
 
 enable_testing()
 file(GLOB TEST_SOURCES tests/*.cpp)
 add_executable(test_flashnotes ${TEST_SOURCES})
-target_link_libraries(test_flashnotes gtest_main domain utils services nlohmann_json::nlohmann_json)
+target_link_libraries(test_flashnotes gtest_main controllers domain utils services nlohmann_json::nlohmann_json)
 add_test(NAME all_tests COMMAND test_flashnotes)
