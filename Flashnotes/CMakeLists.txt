@@ -27,11 +27,23 @@ add_library(domain
 target_include_directories(domain PUBLIC include)
 target_link_libraries(domain nlohmann_json::nlohmann_json)
 
+add_library(utils
+    src/utils/Logger.cpp
+)
+target_include_directories(utils PUBLIC include)
+
+add_library(services
+    src/services/JsonPersistenceService.cpp
+)
+target_include_directories(services PUBLIC include)
+target_link_libraries(services domain utils nlohmann_json::nlohmann_json)
+target_compile_definitions(services PUBLIC UNIT_TEST)
+
 add_executable(flashnotes src/main.cpp)
-target_link_libraries(flashnotes domain)
+target_link_libraries(flashnotes domain utils services)
 
 enable_testing()
 file(GLOB TEST_SOURCES tests/*.cpp)
 add_executable(test_flashnotes ${TEST_SOURCES})
-target_link_libraries(test_flashnotes gtest_main domain nlohmann_json::nlohmann_json)
+target_link_libraries(test_flashnotes gtest_main domain utils services nlohmann_json::nlohmann_json)
 add_test(NAME all_tests COMMAND test_flashnotes)
