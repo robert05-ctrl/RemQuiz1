@@ -4,7 +4,6 @@
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
 
-
 namespace FlashnotesGUI {
 
 NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
@@ -13,7 +12,7 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     Dock = DockStyle::Fill;
 
     noteTitle = gcnew TextBox();
-    noteTitle->PlaceholderText = "Title";
+
     noteTitle->Dock = DockStyle::Top;
 
     noteBody = gcnew TextBox();

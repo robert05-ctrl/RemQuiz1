@@ -4,7 +4,6 @@
 #using <System.Drawing.dll>
 #include <controllers/AppController.hpp>
 
-
 using namespace System;
 using namespace System::Windows::Forms;
 

@@ -4,6 +4,8 @@
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
 
+using namespace System::Drawing; // for ContentAlignment
+
 namespace FlashnotesGUI {
 
 FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardController* ctrl)
