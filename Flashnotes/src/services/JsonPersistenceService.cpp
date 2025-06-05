@@ -37,7 +37,7 @@ std::vector<Flashcard> JsonPersistenceService::loadFlashcards() {
 }
 
 std::vector<Material> JsonPersistenceService::loadMaterials() {
-    return {};
+    return load<Material>("materials.json");
 }
 
 void JsonPersistenceService::saveNotes(const std::vector<Note>& notes) {
@@ -52,8 +52,8 @@ void JsonPersistenceService::saveFlashcards(const std::vector<Flashcard>& cards)
     save("flashcards.json", cards);
 }
 
-void JsonPersistenceService::saveMaterials(const std::vector<Material>&) {
-    // stub
+void JsonPersistenceService::saveMaterials(const std::vector<Material>& mats) {
+    save("materials.json", mats);
 }
 
 } // namespace flashnotes
