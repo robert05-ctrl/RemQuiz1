@@ -4,6 +4,7 @@
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
 
+
 namespace FlashnotesGUI {
 
 NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
