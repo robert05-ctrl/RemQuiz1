@@ -35,3 +35,4 @@ set_target_properties(FlashnotesGUI PROPERTIES
 
 # Explicitly add /clr for MSVC
 target_compile_options(FlashnotesGUI PRIVATE /clr)
+
