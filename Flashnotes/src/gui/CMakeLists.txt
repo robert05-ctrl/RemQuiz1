@@ -25,3 +25,6 @@ target_link_libraries(FlashnotesGUI PRIVATE controllers services domain utils)
 set_target_properties(FlashnotesGUI PROPERTIES
     COMMON_LANGUAGE_RUNTIME ""
 )
+
+# Explicitly add /clr for MSVC to avoid missing CLR errors
+target_compile_options(FlashnotesGUI PRIVATE /clr)

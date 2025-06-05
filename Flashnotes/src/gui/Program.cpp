@@ -2,6 +2,7 @@
 #using <System.dll>
 #using <System.Windows.Forms.dll>
 #using <System.Drawing.dll>
+#include <controllers/AppController.hpp>
 
 
 using namespace System;
