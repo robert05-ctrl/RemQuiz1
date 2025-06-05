@@ -40,7 +40,10 @@ add_library(services
 )
 target_include_directories(services PUBLIC include)
 target_link_libraries(services domain utils nlohmann_json::nlohmann_json)
-target_compile_definitions(services PUBLIC UNIT_TEST)
+# build the services library with UNIT_TEST enabled but do not
+# propagate the definition to consumers so production targets
+# remain clean of test hooks
+target_compile_definitions(services PRIVATE UNIT_TEST)
 
 add_library(controllers
     src/controllers/AppController.cpp
@@ -62,4 +65,7 @@ enable_testing()
 file(GLOB TEST_SOURCES tests/*.cpp)
 add_executable(test_flashnotes ${TEST_SOURCES})
 target_link_libraries(test_flashnotes gtest_main controllers domain utils services nlohmann_json::nlohmann_json)
+# test sources rely on helper hooks enabled by the UNIT_TEST
+# definition in the services library
+target_compile_definitions(test_flashnotes PRIVATE UNIT_TEST)
 add_test(NAME all_tests COMMAND test_flashnotes)
