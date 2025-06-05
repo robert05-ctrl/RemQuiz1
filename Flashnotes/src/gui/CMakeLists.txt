@@ -26,5 +26,9 @@ set_target_properties(FlashnotesGUI PROPERTIES
     COMMON_LANGUAGE_RUNTIME ""
 )
 
-# Explicitly add /clr for MSVC to avoid missing CLR errors
-target_compile_options(FlashnotesGUI PRIVATE /clr)
+
+# Explicitly add /clr for MSVC and disable /RTC1 which conflicts with /clr
+target_compile_options(FlashnotesGUI PRIVATE
+    /clr
+    $<$<CONFIG:Debug>:/RTC->
+)
