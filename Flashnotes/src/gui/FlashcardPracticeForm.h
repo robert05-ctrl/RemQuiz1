@@ -6,10 +6,9 @@
 
 #include <controllers/FlashcardController.hpp>
 
+namespace FlashnotesGUI {
 using namespace System;
 using namespace System::Windows::Forms;
-
-namespace FlashnotesGUI {
 
 public ref class FlashcardPracticeForm : public UserControl
 {

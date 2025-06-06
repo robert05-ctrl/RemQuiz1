@@ -9,10 +9,9 @@
 #include "FlashcardPracticeForm.h"
 #include <controllers/AppController.hpp>
 
+namespace FlashnotesGUI {
 using namespace System;
 using namespace System::Windows::Forms;
-
-namespace FlashnotesGUI {
 
 public ref class MainWindow : public Form
 {
