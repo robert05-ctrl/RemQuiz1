@@ -14,6 +14,7 @@ public ref class FlashcardPracticeForm : public UserControl
 {
 public:
     FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl);
+    ~FlashcardPracticeForm();
 
 private:
     flashnotes::FlashcardSetController* controller;
@@ -24,7 +25,7 @@ private:
     Button^ btnNext;
     bool showingBack;
     int currentIndex;
-    std::vector<flashnotes::Flashcard> cards;
+    std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
     void onSelect(Object^ sender, EventArgs^ e);

@@ -13,6 +13,7 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
     : showingBack(false), currentIndex(0)
 {
     controller = ctrl;
+    cards = new std::vector<flashnotes::Flashcard>();
     Dock = DockStyle::Fill;
 
     setList = gcnew ListBox();
@@ -50,13 +51,17 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
     loadSets();
 }
 
+FlashcardPracticeForm::~FlashcardPracticeForm() {
+    delete cards;
+}
+
 void FlashcardPracticeForm::loadSets()
 {
     setList->Items->Clear();
     auto res = controller->listSets();
     if (!res) { lblFront->Text = "Error"; return; }
     for (auto& s : res.value()) setList->Items->Add(gcnew String(s.title.c_str()));
-    cards.clear();
+    cards->clear();
     if (setList->Items->Count > 0) setList->SelectedIndex = 0;
 }
 
@@ -64,18 +69,18 @@ void FlashcardPracticeForm::onSelect(Object^, EventArgs^)
 {
     int idx = setList->SelectedIndex;
     auto res = controller->listSets();
-    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards.clear(); return; }
+    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards->clear(); return; }
     auto s = res.value()[idx];
-    cards = s.cards;
+    *cards = s.cards;
     currentIndex = 0;
     loadNext();
 }
 
 void FlashcardPracticeForm::loadNext()
 {
-    if (cards.empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; return; }
-    if (currentIndex >= static_cast<int>(cards.size())) currentIndex = 0;
-    auto& c = cards[currentIndex++];
+    if (cards->empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; return; }
+    if (currentIndex >= static_cast<int>(cards->size())) currentIndex = 0;
+    auto& c = (*cards)[currentIndex++];
     lblFront->Text = gcnew String(c.front.c_str());
     lblBack->Text = gcnew String(c.back.c_str());
     lblBack->Visible = false;
