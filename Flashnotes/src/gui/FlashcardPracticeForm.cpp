@@ -17,7 +17,6 @@ bool compareSuccess(const flashnotes::Flashcard& a, const flashnotes::Flashcard&
 }
 } // namespace
 
-
 FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl)
     : showingBack(false), currentIndex(0), hasSet(false), currentId(-1), currentTitle(nullptr)
 {
