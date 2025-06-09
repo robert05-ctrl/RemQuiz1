@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <stdexcept>
+#include <functional>
 
 namespace flashnotes {
 
@@ -63,6 +64,36 @@ void FileService::removeFolder(std::uint64_t id) {
                    folders_.end());
     for (auto& m : cache_) if (m.folderId == static_cast<int>(id)) m.folderId = -1;
     syncToDisk();
+}
+
+std::vector<FolderTree> FileService::folderTree() const {
+    std::vector<FolderTree> roots;
+    // helper lambda to recursively build tree
+    std::function<FolderTree(const Folder&)> build = [&](const Folder& f) {
+        FolderTree node{f};
+        for (const auto& m : cache_) {
+            if (m.folderId == f.id) node.files.push_back(m);
+        }
+        for (const auto& child : folders_) {
+            if (child.parentId == f.id) {
+                node.subfolders.push_back(build(child));
+            }
+        }
+        return node;
+    };
+
+    for (const auto& f : folders_) {
+        if (f.parentId == -1) {
+            roots.push_back(build(f));
+        }
+    }
+    // files not in any folder
+    FolderTree rootDummy{Folder{-1, -1, ""}};
+    for (const auto& m : cache_) {
+        if (m.folderId == -1) rootDummy.files.push_back(m);
+    }
+    if (!rootDummy.files.empty()) roots.push_back(rootDummy);
+    return roots;
 }
 
 void FileService::syncFromDisk() {
