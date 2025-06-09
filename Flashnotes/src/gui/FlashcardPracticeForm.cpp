@@ -4,13 +4,14 @@
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
 #include <vector>
+#include <algorithm>
 
 using namespace System::Drawing; // for ContentAlignment
 
 namespace FlashnotesGUI {
 
 FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl)
-    : showingBack(false), currentIndex(0)
+    : showingBack(false), currentIndex(0), hasSet(false)
 {
     controller = ctrl;
     cards = new std::vector<flashnotes::Flashcard>();
@@ -32,6 +33,29 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
     lblBack->Visible = false;
     lblBack->TextAlign = ContentAlignment::MiddleCenter;
 
+    modeBox = gcnew ComboBox();
+    modeBox->Dock = DockStyle::Top;
+    modeBox->Items->Add("Flip");
+    modeBox->Items->Add("Type");
+    modeBox->SelectedIndex = 0;
+    modeBox->SelectedIndexChanged += gcnew EventHandler(this, &FlashcardPracticeForm::onModeChanged);
+
+    answerBox = gcnew TextBox();
+    answerBox->Dock = DockStyle::Top;
+    answerBox->Visible = false;
+
+    btnCheck = gcnew Button();
+    btnCheck->Text = "Check";
+    btnCheck->Dock = DockStyle::Top;
+    btnCheck->Visible = false;
+    btnCheck->Click += gcnew EventHandler(this, &FlashcardPracticeForm::onCheck);
+
+    lblResult = gcnew Label();
+    lblResult->Dock = DockStyle::Top;
+    lblResult->Height = 30;
+    lblResult->Visible = false;
+    lblResult->TextAlign = ContentAlignment::MiddleCenter;
+
     btnFlip = gcnew Button();
     btnFlip->Text = "Flip";
     btnFlip->Dock = DockStyle::Top;
@@ -43,9 +67,13 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
     btnNext->Click += gcnew EventHandler(this, &FlashcardPracticeForm::onNext);
 
     Controls->Add(btnNext);
+    Controls->Add(btnCheck);
     Controls->Add(btnFlip);
+    Controls->Add(lblResult);
+    Controls->Add(answerBox);
     Controls->Add(lblBack);
     Controls->Add(lblFront);
+    Controls->Add(modeBox);
     Controls->Add(setList);
 
     loadSets();
@@ -69,22 +97,35 @@ void FlashcardPracticeForm::onSelect(Object^, EventArgs^)
 {
     int idx = setList->SelectedIndex;
     auto res = controller->listSets();
-    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards->clear(); return; }
-    auto s = res.value()[idx];
-    *cards = s.cards;
+    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards->clear(); hasSet=false; return; }
+    currentSet = res.value()[idx];
+    hasSet = true;
+    *cards = currentSet.cards;
     currentIndex = 0;
     loadNext();
 }
 
 void FlashcardPracticeForm::loadNext()
 {
-    if (cards->empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; return; }
+    if (cards->empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; answerBox->Visible=false; btnCheck->Visible=false; lblResult->Visible=false; return; }
+    bool typeMode = modeBox->SelectedIndex == 1;
+    if (typeMode) {
+        std::sort(cards->begin(), cards->end(), [](const flashnotes::Flashcard& a, const flashnotes::Flashcard& b){ return a.successRate < b.successRate; });
+    }
     if (currentIndex >= static_cast<int>(cards->size())) currentIndex = 0;
     auto& c = (*cards)[currentIndex++];
     lblFront->Text = gcnew String(c.front.c_str());
-    lblBack->Text = gcnew String(c.back.c_str());
-    lblBack->Visible = false;
-    showingBack = false;
+    if (typeMode) {
+        answerBox->Text = "";
+        answerBox->Visible = true;
+        btnCheck->Visible = true;
+        lblBack->Visible = false;
+        lblResult->Visible = false;
+    } else {
+        lblBack->Text = gcnew String(c.back.c_str());
+        lblBack->Visible = false;
+        showingBack = false;
+    }
 }
 
 void FlashcardPracticeForm::onFlip(Object^ sender, EventArgs^ e)
@@ -95,6 +136,30 @@ void FlashcardPracticeForm::onFlip(Object^ sender, EventArgs^ e)
 
 void FlashcardPracticeForm::onNext(Object^ sender, EventArgs^ e)
 {
+    loadNext();
+}
+
+void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
+{
+    if (cards->empty()) return;
+    int idx = currentIndex - 1;
+    if (idx < 0 || idx >= static_cast<int>(cards->size())) return;
+    auto& c = (*cards)[idx];
+    std::string ans = msclr::interop::marshal_as<std::string>(answerBox->Text);
+    bool correct = ans == c.back;
+    lblResult->Text = correct ? "Correct" : "Oops";
+    lblResult->Visible = true;
+    c.successRate = (c.successRate + (correct ? 1.0 : 0.0)) / 2.0;
+    if (hasSet) {
+        currentSet.cards = *cards;
+        controller->updateSet(currentSet.id, currentSet.title, currentSet.cards);
+    }
+}
+
+void FlashcardPracticeForm::onModeChanged(Object^, EventArgs^)
+{
+    showingBack = false;
+    currentIndex = 0;
     loadNext();
 }
 

@@ -23,8 +23,14 @@ private:
     Label^ lblBack;
     Button^ btnFlip;
     Button^ btnNext;
+    Button^ btnCheck;
+    TextBox^ answerBox;
+    ComboBox^ modeBox;
+    Label^ lblResult;
     bool showingBack;
     int currentIndex;
+    bool hasSet;
+    flashnotes::FlashcardSet currentSet;
     std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
@@ -32,6 +38,8 @@ private:
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);
     void onNext(Object^ sender, EventArgs^ e);
+    void onCheck(Object^ sender, EventArgs^ e);
+    void onModeChanged(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI
