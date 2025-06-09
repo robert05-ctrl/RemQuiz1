@@ -4,7 +4,7 @@
 #using <System.Windows.Forms.dll>
 #using <System.Drawing.dll>
 
-#include <controllers/FlashcardController.hpp>
+#include <controllers/FlashcardSetController.hpp>
 
 namespace FlashnotesGUI {
 using namespace System;
@@ -13,16 +13,21 @@ using namespace System::Windows::Forms;
 public ref class FlashcardPracticeForm : public UserControl
 {
 public:
-    FlashcardPracticeForm(flashnotes::FlashcardController* ctrl);
+    FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl);
 
 private:
-    flashnotes::FlashcardController* controller;
+    flashnotes::FlashcardSetController* controller;
+    ListBox^ setList;
     Label^ lblFront;
     Label^ lblBack;
     Button^ btnFlip;
     Button^ btnNext;
     bool showingBack;
+    int currentIndex;
+    std::vector<flashnotes::Flashcard> cards;
 
+    void loadSets();
+    void onSelect(Object^ sender, EventArgs^ e);
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);
     void onNext(Object^ sender, EventArgs^ e);

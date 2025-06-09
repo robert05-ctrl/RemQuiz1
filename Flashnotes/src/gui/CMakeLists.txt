@@ -17,6 +17,7 @@ set(SOURCES
     NoteEditorForm.cpp
     FileManagerForm.cpp
     FlashcardPracticeForm.cpp
+    FlashcardSetEditorForm.cpp
 )
 
 add_executable(FlashnotesGUI WIN32 ${SOURCES})

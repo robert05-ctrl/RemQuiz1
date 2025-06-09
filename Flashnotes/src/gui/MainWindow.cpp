@@ -27,11 +27,13 @@ void MainWindow::initMenu()
 {
     auto notesItem = gcnew ToolStripMenuItem("Edit Notes");
     auto filesItem = gcnew ToolStripMenuItem("Organise Files");
-    auto flashItem = gcnew ToolStripMenuItem("Flashcards");
+    auto flashItem = gcnew ToolStripMenuItem("Practice Cards");
+    auto setsItem  = gcnew ToolStripMenuItem("Edit Card Sets");
     notesItem->Click += gcnew EventHandler(this, &MainWindow::onEditNotes);
     filesItem->Click += gcnew EventHandler(this, &MainWindow::onOrganiseFiles);
     flashItem->Click += gcnew EventHandler(this, &MainWindow::onFlashcards);
-    menu->Items->AddRange(gcnew cli::array<ToolStripItem^>{notesItem, filesItem, flashItem});
+    setsItem->Click  += gcnew EventHandler(this, &MainWindow::onEditSets);
+    menu->Items->AddRange(gcnew cli::array<ToolStripItem^>{notesItem, filesItem, setsItem, flashItem});
 }
 
 void MainWindow::loadControl(UserControl^ c)
@@ -58,8 +60,15 @@ void MainWindow::onOrganiseFiles(Object^ sender, EventArgs^ e)
 void MainWindow::onFlashcards(Object^ sender, EventArgs^ e)
 {
     if (!flashcardForm)
-        flashcardForm = gcnew FlashcardPracticeForm(&(controller->flashcards()));
+        flashcardForm = gcnew FlashcardPracticeForm(&(controller->flashcardSets()));
     loadControl(flashcardForm);
+}
+
+void MainWindow::onEditSets(Object^ sender, EventArgs^ e)
+{
+    if (!setEditor)
+        setEditor = gcnew FlashcardSetEditorForm(&(controller->flashcardSets()));
+    loadControl(setEditor);
 }
 
 } // namespace FlashnotesGUI

@@ -3,16 +3,22 @@
 #using <System.Windows.Forms.dll>
 #using <System.Drawing.dll>
 #include <msclr/marshal_cppstd.h>
+#include <vector>
 
 using namespace System::Drawing; // for ContentAlignment
 
 namespace FlashnotesGUI {
 
-FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardController* ctrl)
-    : showingBack(false)
+FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl)
+    : showingBack(false), currentIndex(0)
 {
     controller = ctrl;
     Dock = DockStyle::Fill;
+
+    setList = gcnew ListBox();
+    setList->Dock = DockStyle::Left;
+    setList->Width = 150;
+    setList->SelectedIndexChanged += gcnew EventHandler(this, &FlashcardPracticeForm::onSelect);
 
     lblFront = gcnew Label();
     lblFront->Dock = DockStyle::Top;
@@ -39,24 +45,41 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardController* ct
     Controls->Add(btnFlip);
     Controls->Add(lblBack);
     Controls->Add(lblFront);
+    Controls->Add(setList);
 
+    loadSets();
+}
+
+void FlashcardPracticeForm::loadSets()
+{
+    setList->Items->Clear();
+    auto res = controller->listSets();
+    if (!res) { lblFront->Text = "Error"; return; }
+    for (auto& s : res.value()) setList->Items->Add(gcnew String(s.title.c_str()));
+    cards.clear();
+    if (setList->Items->Count > 0) setList->SelectedIndex = 0;
+}
+
+void FlashcardPracticeForm::onSelect(Object^, EventArgs^)
+{
+    int idx = setList->SelectedIndex;
+    auto res = controller->listSets();
+    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards.clear(); return; }
+    auto s = res.value()[idx];
+    cards = s.cards;
+    currentIndex = 0;
     loadNext();
 }
 
 void FlashcardPracticeForm::loadNext()
 {
-    auto res = controller->getNextCards(1);
-    if (!res || res.value().empty()) {
-        lblFront->Text = "No cards";
-        lblBack->Text = "";
-        lblBack->Visible = false;
-    } else {
-        auto& c = res.value().front();
-        lblFront->Text = gcnew String(c.front.c_str());
-        lblBack->Text = gcnew String(c.back.c_str());
-        lblBack->Visible = false;
-        showingBack = false;
-    }
+    if (cards.empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; return; }
+    if (currentIndex >= static_cast<int>(cards.size())) currentIndex = 0;
+    auto& c = cards[currentIndex++];
+    lblFront->Text = gcnew String(c.front.c_str());
+    lblBack->Text = gcnew String(c.back.c_str());
+    lblBack->Visible = false;
+    showingBack = false;
 }
 
 void FlashcardPracticeForm::onFlip(Object^ sender, EventArgs^ e)

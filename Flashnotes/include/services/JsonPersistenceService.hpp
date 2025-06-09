@@ -8,6 +8,7 @@
 #include "domain/note.hpp"
 #include "domain/folder.hpp"
 #include "domain/flashcard.hpp"
+#include "domain/flashcard_set.hpp"
 #include "utils/Logger.hpp"
 
 namespace flashnotes {
@@ -25,11 +26,13 @@ public:
     static std::vector<Note>      loadNotes();
     static std::vector<Folder>    loadFolders();
     static std::vector<Flashcard> loadFlashcards();
+    static std::vector<FlashcardSet> loadFlashcardSets();
     static std::vector<Material>  loadMaterials();
 
     static void saveNotes     (const std::vector<Note>&);
     static void saveFolders   (const std::vector<Folder>&);
     static void saveFlashcards(const std::vector<Flashcard>&);
+    static void saveFlashcardSets(const std::vector<FlashcardSet>&);
     static void saveMaterials (const std::vector<Material>&);
 
 #ifdef UNIT_TEST

@@ -16,7 +16,6 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     noteList->Dock = DockStyle::Left;
     noteList->Width = 150;
     noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
-
     noteList = gcnew ListBox();
     noteList->Dock = DockStyle::Left;
     noteList->Width = 150;
@@ -31,37 +30,36 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
 
     btnOpen = gcnew Button();
     btnOpen->Text = "Open";
-    btnOpen->Dock = DockStyle::Bottom;
+    btnOpen->AutoSize = true;
     btnOpen->Click += gcnew EventHandler(this, &NoteEditorForm::onOpen);
 
     btnUpdate = gcnew Button();
     btnUpdate->Text = "Update";
-    btnUpdate->Dock = DockStyle::Bottom;
+    btnUpdate->AutoSize = true;
     btnUpdate->Click += gcnew EventHandler(this, &NoteEditorForm::onUpdate);
 
     btnNew = gcnew Button();
     btnNew->Text = "New";
-    btnNew->Dock = DockStyle::Bottom;
+    btnNew->AutoSize = true;
     btnNew->Click += gcnew EventHandler(this, &NoteEditorForm::onNew);
 
     btnDelete = gcnew Button();
     btnDelete->Text = "Delete";
-    btnDelete->Dock = DockStyle::Bottom;
+    btnDelete->AutoSize = true;
     btnDelete->Click += gcnew EventHandler(this, &NoteEditorForm::onDelete);
 
     btnSave = gcnew Button();
     btnSave->Text = "Save";
-    btnSave->Dock = DockStyle::Bottom;
+    btnSave->AutoSize = true;
     btnSave->Click += gcnew EventHandler(this, &NoteEditorForm::onSave);
 
+    FlowLayoutPanel^ bar = gcnew FlowLayoutPanel();
+    bar->Dock = DockStyle::Top;
+    bar->AutoSize = true;
+    bar->Controls->AddRange(gcnew cli::array<Control^>{btnNew, btnOpen, btnSave, btnUpdate, btnDelete});
+
     Controls->Add(noteBody);
-    Controls->Add(btnSave);
-
-    Controls->Add(btnUpdate);
-    Controls->Add(btnDelete);
-    Controls->Add(btnOpen);
-    Controls->Add(btnNew);
-
+    Controls->Add(bar);
     Controls->Add(noteTitle);
     Controls->Add(noteList);
 
@@ -183,7 +181,6 @@ void NoteEditorForm::onDelete(Object^ sender, EventArgs^ e)
     noteBody->Text = "";
     currentId = -1;
     loadNotes();
-
 }
 
 } // namespace FlashnotesGUI
