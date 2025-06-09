@@ -82,7 +82,7 @@ void FlashcardSetEditorForm::onNew(Object^, EventArgs^)
 
 void FlashcardSetEditorForm::onAddCard(Object^, EventArgs^)
 {
-    grid->Rows->Add("",");
+    grid->Rows->Add(gcnew String(""), gcnew String(""));
 }
 
 void FlashcardSetEditorForm::onRemoveCard(Object^, EventArgs^)
