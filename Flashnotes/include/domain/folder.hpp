@@ -9,8 +9,8 @@ namespace flashnotes {
 
 struct Folder {
     int id{};
+    int parentId{-1};
     std::string name;
-    std::vector<int> childrenIds;
 };
 
 void to_json(nlohmann::json& j, const Folder& f);

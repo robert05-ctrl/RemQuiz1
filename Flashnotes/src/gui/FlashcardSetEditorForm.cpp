@@ -41,8 +41,8 @@ FlashcardSetEditorForm::FlashcardSetEditorForm(flashnotes::FlashcardSetControlle
     bar->Controls->AddRange(gcnew cli::array<Control^>{btnNew, btnOpen, btnSave, btnUpdate, btnDelete, btnAddCard, btnRemoveCard});
 
     Controls->Add(grid);
-    Controls->Add(bar);
     Controls->Add(titleBox);
+    Controls->Add(bar);
     Controls->Add(setList);
 
     loadSets();

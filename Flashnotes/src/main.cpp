@@ -19,7 +19,7 @@ int main() {
         }
         std::cout << "Notes count: " << notes.value().size() << std::endl;
 
-        auto mat = app.files().createFile();
+        auto mat = app.files().createFile("/tmp/test.txt");
         if (!mat) {
             std::cerr << mat.error() << std::endl;
             return 1;
