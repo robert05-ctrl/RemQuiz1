@@ -59,8 +59,8 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     bar->Controls->AddRange(gcnew cli::array<Control^>{btnNew, btnOpen, btnSave, btnUpdate, btnDelete});
 
     Controls->Add(noteBody);
-    Controls->Add(bar);
     Controls->Add(noteTitle);
+    Controls->Add(bar);
     Controls->Add(noteList);
 
     loadNotes();
