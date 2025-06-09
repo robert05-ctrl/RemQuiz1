@@ -15,3 +15,18 @@ TEST(NotesController, ThrowsOnEmptyTitle) {
     EXPECT_FALSE(res);
     EXPECT_EQ(res.error(), "Title must not be empty");
 }
+
+TEST(NotesController, UpdateNote) {
+    fs::path root = fs::temp_directory_path() / "notes_controller_update";
+    fs::remove_all(root);
+    JsonPersistenceService::setDataRoot(root);
+    NotesController ctrl;
+    auto created = ctrl.createNote("t","b","/tmp/path.txt");
+    ASSERT_TRUE(created);
+    auto updated = ctrl.updateNote(created.value().id, "t2", "b2");
+    ASSERT_TRUE(updated);
+    EXPECT_EQ(updated.value().title, "t2");
+    auto list = ctrl.listNotes();
+    ASSERT_TRUE(list);
+    EXPECT_EQ(list.value()[0].title, "t2");
+}

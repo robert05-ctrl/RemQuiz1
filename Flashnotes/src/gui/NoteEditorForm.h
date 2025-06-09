@@ -21,14 +21,19 @@ private:
     TextBox^ noteTitle;
     TextBox^ noteBody;
     Button^ btnSave;
+    Button^ btnUpdate;
     Button^ btnOpen;
     Button^ btnNew;
+    Button^ btnDelete;
+    int currentId;
 
     void loadNotes();
     void onSelect(Object^ sender, EventArgs^ e);
     void onOpen(Object^ sender, EventArgs^ e);
     void onNew(Object^ sender, EventArgs^ e);
     void onSave(Object^ sender, EventArgs^ e);
+    void onUpdate(Object^ sender, EventArgs^ e);
+    void onDelete(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI

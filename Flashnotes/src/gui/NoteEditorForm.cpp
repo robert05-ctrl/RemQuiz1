@@ -10,6 +10,12 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
 {
     controller = ctrl;
     Dock = DockStyle::Fill;
+    currentId = -1;
+
+    noteList = gcnew ListBox();
+    noteList->Dock = DockStyle::Left;
+    noteList->Width = 150;
+    noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
 
     noteList = gcnew ListBox();
     noteList->Dock = DockStyle::Left;
@@ -28,11 +34,21 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     btnOpen->Dock = DockStyle::Bottom;
     btnOpen->Click += gcnew EventHandler(this, &NoteEditorForm::onOpen);
 
+    btnUpdate = gcnew Button();
+    btnUpdate->Text = "Update";
+    btnUpdate->Dock = DockStyle::Bottom;
+    btnUpdate->Click += gcnew EventHandler(this, &NoteEditorForm::onUpdate);
 
     btnNew = gcnew Button();
     btnNew->Text = "New";
     btnNew->Dock = DockStyle::Bottom;
     btnNew->Click += gcnew EventHandler(this, &NoteEditorForm::onNew);
+
+    btnDelete = gcnew Button();
+    btnDelete->Text = "Delete";
+    btnDelete->Dock = DockStyle::Bottom;
+    btnDelete->Click += gcnew EventHandler(this, &NoteEditorForm::onDelete);
+
     btnSave = gcnew Button();
     btnSave->Text = "Save";
     btnSave->Dock = DockStyle::Bottom;
@@ -40,6 +56,9 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
 
     Controls->Add(noteBody);
     Controls->Add(btnSave);
+
+    Controls->Add(btnUpdate);
+    Controls->Add(btnDelete);
     Controls->Add(btnOpen);
     Controls->Add(btnNew);
 
@@ -66,6 +85,7 @@ void NoteEditorForm::onSave(Object^ sender, EventArgs^ e)
     else
     {
         System::IO::File::WriteAllText(dlg->FileName, gcnew String(body.c_str()));
+        currentId = res.value().id;
         MessageBox::Show("Saved!");
     }
 
@@ -88,10 +108,11 @@ void NoteEditorForm::loadNotes()
 void NoteEditorForm::onSelect(Object^ sender, EventArgs^ e)
 {
     int idx = noteList->SelectedIndex;
-    if (idx < 0) return;
+    if (idx < 0) { currentId = -1; return; }
     auto res = controller->listNotes();
     if (!res || idx >= static_cast<int>(res.value().size())) return;
     auto& n = res.value()[idx];
+    currentId = n.id;
     noteTitle->Text = gcnew String(n.title.c_str());
     noteBody->Text = gcnew String(n.body.c_str());
 }
@@ -103,10 +124,14 @@ void NoteEditorForm::onOpen(Object^ sender, EventArgs^ e)
     auto res = controller->listNotes();
     if (!res || idx >= static_cast<int>(res.value().size())) return;
     auto& n = res.value()[idx];
+    currentId = n.id;
     if (!n.savedPath.empty()) {
         System::String^ path = gcnew System::String(n.savedPath.c_str());
         if (System::IO::File::Exists(path)) {
-            System::Diagnostics::Process::Start(path);
+            noteTitle->Text = gcnew String(n.title.c_str());
+            noteBody->Text = System::IO::File::ReadAllText(path);
+        } else {
+            MessageBox::Show("File not found");
         }
     }
 }
@@ -116,6 +141,49 @@ void NoteEditorForm::onNew(Object^ sender, EventArgs^ e)
     noteList->ClearSelected();
     noteTitle->Text = "";
     noteBody->Text = "";
+    currentId = -1;
+}
+
+void NoteEditorForm::onUpdate(Object^ sender, EventArgs^ e)
+{
+    int idx = noteList->SelectedIndex;
+    if (idx < 0) return;
+    auto listRes = controller->listNotes();
+    if (!listRes || idx >= static_cast<int>(listRes.value().size())) return;
+    auto n = listRes.value()[idx];
+    std::string title = msclr::interop::marshal_as<std::string>(noteTitle->Text);
+    std::string body  = msclr::interop::marshal_as<std::string>(noteBody->Text);
+    auto res = controller->updateNote(n.id, title, body);
+    if (!res) {
+        MessageBox::Show(gcnew String(res.error().c_str()));
+        return;
+    }
+    System::String^ path = gcnew System::String(n.savedPath.c_str());
+    if (System::IO::File::Exists(path)) {
+        System::IO::File::WriteAllText(path, gcnew String(body.c_str()));
+    }
+    currentId = n.id;
+    MessageBox::Show("Updated!");
+    loadNotes();
+}
+
+void NoteEditorForm::onDelete(Object^ sender, EventArgs^ e)
+{
+    int idx = noteList->SelectedIndex;
+    if (idx < 0) return;
+    auto listRes = controller->listNotes();
+    if (!listRes || idx >= static_cast<int>(listRes.value().size())) return;
+    auto n = listRes.value()[idx];
+    auto res = controller->removeNote(n.id);
+    if (!res) {
+        MessageBox::Show(gcnew String(res.error().c_str()));
+    }
+    noteList->ClearSelected();
+    noteTitle->Text = "";
+    noteBody->Text = "";
+    currentId = -1;
+    loadNotes();
+
 }
 
 } // namespace FlashnotesGUI
