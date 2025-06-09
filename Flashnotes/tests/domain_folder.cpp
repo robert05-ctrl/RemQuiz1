@@ -5,11 +5,11 @@
 using flashnotes::Folder;
 using nlohmann::json;
 
-TEST(FolderTest, VectorSerialization) {
-    Folder f{3, "root", {1,2}};
+TEST(FolderTest, BasicSerialization) {
+    Folder f{3, 0, "root"};
     json j = f;
-    ASSERT_TRUE(j["childrenIds"].is_array());
+    ASSERT_EQ(j["name"], "root");
     Folder out = j.get<Folder>();
-    EXPECT_EQ(out.childrenIds.size(), 2u);
-    EXPECT_EQ(out.childrenIds[0], 1);
+    EXPECT_EQ(out.id, 3);
+    EXPECT_EQ(out.parentId, 0);
 }

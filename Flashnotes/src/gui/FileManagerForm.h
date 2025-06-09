@@ -17,10 +17,17 @@ public:
 
 private:
     flashnotes::FileController* controller;
-    ListView^ fileList;
-    Button^ btnAdd;
+    TreeView^ tree;
+    Button^ btnAddFile;
+    Button^ btnAddFolder;
+    Button^ btnOpen;
+    Button^ btnDelete;
 
-    void onAdd(Object^ sender, EventArgs^ e);
+    void loadData();
+    void onAddFile(Object^ sender, EventArgs^ e);
+    void onAddFolder(Object^ sender, EventArgs^ e);
+    void onOpen(Object^ sender, EventArgs^ e);
+    void onDelete(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI
