@@ -102,7 +102,7 @@ FlashcardPracticeForm::~FlashcardPracticeForm() {
 void FlashcardPracticeForm::sortCards()
 {
     if (!cards->empty()) {
-        std::sort(cards->begin(), cards->end(), compareSuccess);
+        std::stable_sort(cards->begin(), cards->end(), compareSuccess);
     }
 }
 
@@ -187,6 +187,7 @@ void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
     if (cards->empty()) return;
     int idx = currentIndex - 1;
     if (idx < 0 || idx >= static_cast<int>(cards->size())) return;
+    auto answered = (*cards)[idx];
     auto& c = (*cards)[idx];
     std::string ans = msclr::interop::marshal_as<std::string>(answerBox->Text);
     bool correct = ans == c.back;
@@ -197,7 +198,12 @@ void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
         controller->updateSet(currentId, *currentTitle, *cards);
     }
     sortCards();
-    currentIndex = 0;
+    int pos = 0;
+    for (; pos < static_cast<int>(cards->size()); ++pos) {
+        if ((*cards)[pos].id == answered.id) break;
+    }
+    currentIndex = pos + 1;
+    if (currentIndex >= static_cast<int>(cards->size())) currentIndex = 0;
 }
 
 void FlashcardPracticeForm::onModeChanged(Object^, EventArgs^)
