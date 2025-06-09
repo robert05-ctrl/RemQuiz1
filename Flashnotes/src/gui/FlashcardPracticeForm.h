@@ -5,6 +5,7 @@
 #using <System.Drawing.dll>
 
 #include <controllers/FlashcardSetController.hpp>
+#include <string>
 
 namespace FlashnotesGUI {
 using namespace System;
@@ -23,8 +24,15 @@ private:
     Label^ lblBack;
     Button^ btnFlip;
     Button^ btnNext;
+    Button^ btnCheck;
+    TextBox^ answerBox;
+    ComboBox^ modeBox;
+    Label^ lblResult;
     bool showingBack;
     int currentIndex;
+    bool hasSet;
+    int currentId;
+    std::string* currentTitle;
     std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
@@ -32,6 +40,8 @@ private:
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);
     void onNext(Object^ sender, EventArgs^ e);
+    void onCheck(Object^ sender, EventArgs^ e);
+    void onModeChanged(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI
