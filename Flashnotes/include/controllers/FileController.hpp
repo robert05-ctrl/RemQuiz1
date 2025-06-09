@@ -3,6 +3,7 @@
 #include <vector>
 #include "domain/material.hpp"
 #include "domain/folder.hpp"
+#include "domain/folder_tree.hpp"
 #include "services/FileService.hpp"
 #include <filesystem>
 #include <string>
@@ -23,6 +24,7 @@ public:
     Expected<Folder> updateFolder(std::uint64_t id, const std::string& name);
     Expected<std::vector<Folder>> listFolders() const;
     Expected<void> removeFolder(std::uint64_t id);
+    Expected<std::vector<FolderTree>> folderTree() const;
 
 private:
     std::shared_ptr<FileService> service_;

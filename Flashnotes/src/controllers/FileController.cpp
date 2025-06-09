@@ -66,4 +66,12 @@ Expected<void> FileController::removeFolder(std::uint64_t id) {
     }
 }
 
+Expected<std::vector<FolderTree>> FileController::folderTree() const {
+    try {
+        return service_->folderTree();
+    } catch (const std::exception& e) {
+        return Expected<std::vector<FolderTree>>(e.what());
+    }
+}
+
 } // namespace flashnotes

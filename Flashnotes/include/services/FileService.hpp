@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "domain/material.hpp"
 #include "domain/folder.hpp"
+#include "domain/folder_tree.hpp"
 #include "services/JsonPersistenceService.hpp"
 
 namespace flashnotes {
@@ -19,6 +20,7 @@ public:
     Folder updateFolder(std::uint64_t id, const std::string& name);
     std::vector<Folder> listFolders() const;
     void removeFolder(std::uint64_t id);
+    std::vector<FolderTree> folderTree() const;
 
 private:
     std::vector<Material> cache_;
