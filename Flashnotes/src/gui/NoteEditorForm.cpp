@@ -16,10 +16,6 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     noteList->Dock = DockStyle::Left;
     noteList->Width = 150;
     noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
-    noteList = gcnew ListBox();
-    noteList->Dock = DockStyle::Left;
-    noteList->Width = 150;
-    noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
 
     noteTitle = gcnew TextBox();
     noteTitle->Dock = DockStyle::Top;
@@ -59,8 +55,8 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     bar->Controls->AddRange(gcnew cli::array<Control^>{btnNew, btnOpen, btnSave, btnUpdate, btnDelete});
 
     Controls->Add(noteBody);
-    Controls->Add(bar);
     Controls->Add(noteTitle);
+    Controls->Add(bar);
     Controls->Add(noteList);
 
     loadNotes();
