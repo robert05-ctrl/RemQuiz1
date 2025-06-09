@@ -7,12 +7,12 @@
 #include "NoteEditorForm.h"
 #include "FileManagerForm.h"
 #include "FlashcardPracticeForm.h"
+#include "FlashcardSetEditorForm.h"
 #include <controllers/AppController.hpp>
 
+namespace FlashnotesGUI {
 using namespace System;
 using namespace System::Windows::Forms;
-
-namespace FlashnotesGUI {
 
 public ref class MainWindow : public Form
 {
@@ -29,12 +29,14 @@ private:
     NoteEditorForm^ noteEditor;
     FileManagerForm^ fileManager;
     FlashcardPracticeForm^ flashcardForm;
+    FlashcardSetEditorForm^ setEditor;
 
     void initMenu();
     void loadControl(UserControl^ c);
     void onEditNotes(Object^ sender, EventArgs^ e);
     void onOrganiseFiles(Object^ sender, EventArgs^ e);
     void onFlashcards(Object^ sender, EventArgs^ e);
+    void onEditSets(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI

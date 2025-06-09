@@ -36,6 +36,10 @@ std::vector<Flashcard> JsonPersistenceService::loadFlashcards() {
     return load<Flashcard>("flashcards.json");
 }
 
+std::vector<FlashcardSet> JsonPersistenceService::loadFlashcardSets() {
+    return load<FlashcardSet>("flashcard_sets.json");
+}
+
 std::vector<Material> JsonPersistenceService::loadMaterials() {
     return load<Material>("materials.json");
 }
@@ -50,6 +54,10 @@ void JsonPersistenceService::saveFolders(const std::vector<Folder>& folders) {
 
 void JsonPersistenceService::saveFlashcards(const std::vector<Flashcard>& cards) {
     save("flashcards.json", cards);
+}
+
+void JsonPersistenceService::saveFlashcardSets(const std::vector<FlashcardSet>& sets) {
+    save("flashcard_sets.json", sets);
 }
 
 void JsonPersistenceService::saveMaterials(const std::vector<Material>& mats) {

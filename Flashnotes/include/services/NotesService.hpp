@@ -14,6 +14,10 @@ public:
                 const std::string& body,
                 const std::filesystem::path& savePath);
 
+    Note update(std::uint64_t id,
+                const std::string& title,
+                const std::string& body);
+
     std::vector<Note> list() const;
     void remove(std::uint64_t id);
 

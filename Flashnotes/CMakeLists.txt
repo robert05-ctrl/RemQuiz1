@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(nlohmann_json)
 add_library(domain
     src/domain/note.cpp
     src/domain/flashcard.cpp
+    src/domain/flashcard_set.cpp
     src/domain/folder.cpp
 )
 target_include_directories(domain PUBLIC include)
@@ -37,6 +38,7 @@ add_library(services
     src/services/NotesService.cpp
     src/services/FileService.cpp
     src/services/FlashcardService.cpp
+    src/services/FlashcardSetService.cpp
 )
 target_include_directories(services PUBLIC include)
 target_link_libraries(services domain utils nlohmann_json::nlohmann_json)
@@ -50,6 +52,7 @@ add_library(controllers
     src/controllers/NotesController.cpp
     src/controllers/FileController.cpp
     src/controllers/FlashcardController.cpp
+    src/controllers/FlashcardSetController.cpp
 )
 target_include_directories(controllers PUBLIC include)
 target_link_libraries(controllers services)
