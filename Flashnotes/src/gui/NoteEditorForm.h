@@ -6,10 +6,9 @@
 
 #include <controllers/NotesController.hpp>
 
+namespace FlashnotesGUI {
 using namespace System;
 using namespace System::Windows::Forms;
-
-namespace FlashnotesGUI {
 
 public ref class NoteEditorForm : public UserControl
 {
@@ -18,10 +17,15 @@ public:
 
 private:
     flashnotes::NotesController* controller;
+    ListBox^ noteList;
     TextBox^ noteTitle;
     TextBox^ noteBody;
     Button^ btnSave;
+    Button^ btnOpen;
 
+    void loadNotes();
+    void onSelect(Object^ sender, EventArgs^ e);
+    void onOpen(Object^ sender, EventArgs^ e);
     void onSave(Object^ sender, EventArgs^ e);
 };
 
