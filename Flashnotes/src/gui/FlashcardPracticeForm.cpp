@@ -181,6 +181,7 @@ void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
     c.successRate = (c.successRate + (correct ? 1.0 : 0.0)) / 2.0;
     if (hasSet && currentTitle) {
         controller->updateSet(currentId, *currentTitle, *cards);
+
     }
 }
 
