@@ -2,6 +2,7 @@
 #define FLASHNOTES_DOMAIN_MATERIAL_HPP
 
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 
 namespace flashnotes {
 
@@ -17,6 +18,11 @@ inline void to_json(nlohmann::json& j, const Material& m) {
 }
 
 inline void from_json(const nlohmann::json& j, Material& m) {
+    // ensure required keys exist before access
+    if (!j.contains("id") || !j.contains("title") ||
+        !j.contains("path") || !j.contains("folderId")) {
+        throw std::runtime_error("Material missing fields");
+    }
     j.at("id").get_to(m.id);
     j.at("title").get_to(m.title);
     j.at("path").get_to(m.path);
