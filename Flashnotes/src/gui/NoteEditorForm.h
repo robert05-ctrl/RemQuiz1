@@ -22,10 +22,12 @@ private:
     TextBox^ noteBody;
     Button^ btnSave;
     Button^ btnOpen;
+    Button^ btnNew;
 
     void loadNotes();
     void onSelect(Object^ sender, EventArgs^ e);
     void onOpen(Object^ sender, EventArgs^ e);
+    void onNew(Object^ sender, EventArgs^ e);
     void onSave(Object^ sender, EventArgs^ e);
 };
 

@@ -28,6 +28,11 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     btnOpen->Dock = DockStyle::Bottom;
     btnOpen->Click += gcnew EventHandler(this, &NoteEditorForm::onOpen);
 
+
+    btnNew = gcnew Button();
+    btnNew->Text = "New";
+    btnNew->Dock = DockStyle::Bottom;
+    btnNew->Click += gcnew EventHandler(this, &NoteEditorForm::onNew);
     btnSave = gcnew Button();
     btnSave->Text = "Save";
     btnSave->Dock = DockStyle::Bottom;
@@ -36,6 +41,8 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     Controls->Add(noteBody);
     Controls->Add(btnSave);
     Controls->Add(btnOpen);
+    Controls->Add(btnNew);
+
     Controls->Add(noteTitle);
     Controls->Add(noteList);
 
@@ -102,6 +109,13 @@ void NoteEditorForm::onOpen(Object^ sender, EventArgs^ e)
             System::Diagnostics::Process::Start(path);
         }
     }
+}
+
+void NoteEditorForm::onNew(Object^ sender, EventArgs^ e)
+{
+    noteList->ClearSelected();
+    noteTitle->Text = "";
+    noteBody->Text = "";
 }
 
 } // namespace FlashnotesGUI
