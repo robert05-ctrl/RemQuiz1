@@ -34,3 +34,4 @@ Saved notes are persisted to `notes.json` under `%APPDATA%/Flashnotes` (or
 note titles and now includes **New**, **Save**, **Open**, **Update**, and
 **Delete** buttons. Select a note to load it from disk, edit the text, update it
 in place, or remove the file entirely.
+

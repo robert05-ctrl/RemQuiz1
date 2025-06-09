@@ -17,6 +17,11 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     noteList->Width = 150;
     noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
 
+    noteList = gcnew ListBox();
+    noteList->Dock = DockStyle::Left;
+    noteList->Width = 150;
+    noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
+
     noteTitle = gcnew TextBox();
     noteTitle->Dock = DockStyle::Top;
 
@@ -51,10 +56,12 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
 
     Controls->Add(noteBody);
     Controls->Add(btnSave);
+
     Controls->Add(btnUpdate);
     Controls->Add(btnDelete);
     Controls->Add(btnOpen);
     Controls->Add(btnNew);
+
     Controls->Add(noteTitle);
     Controls->Add(noteList);
 
@@ -176,6 +183,7 @@ void NoteEditorForm::onDelete(Object^ sender, EventArgs^ e)
     noteBody->Text = "";
     currentId = -1;
     loadNotes();
+
 }
 
 } // namespace FlashnotesGUI
