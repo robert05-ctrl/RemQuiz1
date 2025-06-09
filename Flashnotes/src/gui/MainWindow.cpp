@@ -61,6 +61,8 @@ void MainWindow::onFlashcards(Object^ sender, EventArgs^ e)
 {
     if (!flashcardForm)
         flashcardForm = gcnew FlashcardPracticeForm(&(controller->flashcardSets()));
+    else
+        flashcardForm->refreshSets();
     loadControl(flashcardForm);
 }
 
