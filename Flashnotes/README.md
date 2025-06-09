@@ -39,3 +39,7 @@ Flashcard sets can also be managed in the GUI. The **Edit Card Sets** screen let
 you create a set, open an existing one, update it, or delete it. Individual
 cards may be added or removed in a table of front/back text. The **Practice
 Cards** screen allows choosing a set and flipping through its cards.
+=======
+**Delete** buttons. Select a note to load it from disk, edit the text, update it
+in place, or remove the file entirely.
+
