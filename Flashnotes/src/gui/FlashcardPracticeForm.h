@@ -5,6 +5,7 @@
 #using <System.Drawing.dll>
 
 #include <controllers/FlashcardSetController.hpp>
+#include <string>
 
 namespace FlashnotesGUI {
 using namespace System;
@@ -15,6 +16,7 @@ public ref class FlashcardPracticeForm : public UserControl
 public:
     FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl);
     ~FlashcardPracticeForm();
+    void refreshSets();
 
 private:
     flashnotes::FlashcardSetController* controller;
@@ -23,15 +25,25 @@ private:
     Label^ lblBack;
     Button^ btnFlip;
     Button^ btnNext;
+    Button^ btnCheck;
+    TextBox^ answerBox;
+    ComboBox^ modeBox;
+    Label^ lblResult;
     bool showingBack;
     int currentIndex;
+    bool hasSet;
+    int currentId;
+    std::string* currentTitle;
     std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
+    void sortCards();
     void onSelect(Object^ sender, EventArgs^ e);
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);
     void onNext(Object^ sender, EventArgs^ e);
+    void onCheck(Object^ sender, EventArgs^ e);
+    void onModeChanged(Object^ sender, EventArgs^ e);
 };
 
 } // namespace FlashnotesGUI
