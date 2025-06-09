@@ -10,8 +10,15 @@ using namespace System::Drawing; // for ContentAlignment
 
 namespace FlashnotesGUI {
 
+namespace {
+bool compareSuccess(const flashnotes::Flashcard& a, const flashnotes::Flashcard& b)
+{
+    return a.successRate < b.successRate;
+}
+} // namespace
+
 FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl)
-    : showingBack(false), currentIndex(0), hasSet(false)
+    : showingBack(false), currentIndex(0), hasSet(false), currentId(-1), currentTitle(nullptr)
 {
     controller = ctrl;
     cards = new std::vector<flashnotes::Flashcard>();
@@ -81,6 +88,10 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
 
 FlashcardPracticeForm::~FlashcardPracticeForm() {
     delete cards;
+    if (currentTitle) {
+        delete currentTitle;
+        currentTitle = nullptr;
+    }
 }
 
 void FlashcardPracticeForm::loadSets()
@@ -90,6 +101,8 @@ void FlashcardPracticeForm::loadSets()
     if (!res) { lblFront->Text = "Error"; return; }
     for (auto& s : res.value()) setList->Items->Add(gcnew String(s.title.c_str()));
     cards->clear();
+    currentId = -1;
+    if (currentTitle) { delete currentTitle; currentTitle = nullptr; }
     if (setList->Items->Count > 0) setList->SelectedIndex = 0;
 }
 
@@ -97,20 +110,36 @@ void FlashcardPracticeForm::onSelect(Object^, EventArgs^)
 {
     int idx = setList->SelectedIndex;
     auto res = controller->listSets();
-    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) { cards->clear(); hasSet=false; return; }
-    currentSet = res.value()[idx];
+    if (!res || idx < 0 || idx >= static_cast<int>(res.value().size())) {
+        cards->clear();
+        hasSet = false;
+        currentId = -1;
+        if (currentTitle) { delete currentTitle; currentTitle = nullptr; }
+        return;
+    }
+    auto s = res.value()[idx];
+    if (currentTitle) { delete currentTitle; }
+    currentTitle = new std::string(s.title);
+    currentId = s.id;
     hasSet = true;
-    *cards = currentSet.cards;
+    *cards = s.cards;
     currentIndex = 0;
     loadNext();
 }
 
 void FlashcardPracticeForm::loadNext()
 {
-    if (cards->empty()) { lblFront->Text = "No cards"; lblBack->Visible=false; answerBox->Visible=false; btnCheck->Visible=false; lblResult->Visible=false; return; }
+    if (cards->empty()) {
+        lblFront->Text = "No cards";
+        lblBack->Visible = false;
+        answerBox->Visible = false;
+        btnCheck->Visible = false;
+        lblResult->Visible = false;
+        return;
+    }
     bool typeMode = modeBox->SelectedIndex == 1;
     if (typeMode) {
-        std::sort(cards->begin(), cards->end(), [](const flashnotes::Flashcard& a, const flashnotes::Flashcard& b){ return a.successRate < b.successRate; });
+        std::sort(cards->begin(), cards->end(), compareSuccess);
     }
     if (currentIndex >= static_cast<int>(cards->size())) currentIndex = 0;
     auto& c = (*cards)[currentIndex++];
@@ -150,9 +179,9 @@ void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
     lblResult->Text = correct ? "Correct" : "Oops";
     lblResult->Visible = true;
     c.successRate = (c.successRate + (correct ? 1.0 : 0.0)) / 2.0;
-    if (hasSet) {
-        currentSet.cards = *cards;
-        controller->updateSet(currentSet.id, currentSet.title, currentSet.cards);
+    if (hasSet && currentTitle) {
+        controller->updateSet(currentId, *currentTitle, *cards);
+
     }
 }
 

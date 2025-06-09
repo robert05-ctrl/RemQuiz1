@@ -5,6 +5,7 @@
 #using <System.Drawing.dll>
 
 #include <controllers/FlashcardSetController.hpp>
+#include <string>
 
 namespace FlashnotesGUI {
 using namespace System;
@@ -30,7 +31,8 @@ private:
     bool showingBack;
     int currentIndex;
     bool hasSet;
-    flashnotes::FlashcardSet currentSet;
+    int currentId;
+    std::string* currentTitle;
     std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
