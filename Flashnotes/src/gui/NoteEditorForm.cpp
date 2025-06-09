@@ -16,10 +16,6 @@ NoteEditorForm::NoteEditorForm(flashnotes::NotesController* ctrl)
     noteList->Dock = DockStyle::Left;
     noteList->Width = 150;
     noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
-    noteList = gcnew ListBox();
-    noteList->Dock = DockStyle::Left;
-    noteList->Width = 150;
-    noteList->SelectedIndexChanged += gcnew EventHandler(this, &NoteEditorForm::onSelect);
 
     noteTitle = gcnew TextBox();
     noteTitle->Dock = DockStyle::Top;

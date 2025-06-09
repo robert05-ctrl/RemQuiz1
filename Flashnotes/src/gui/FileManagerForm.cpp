@@ -79,8 +79,11 @@ void FileManagerForm::onAddFile(Object^ sender, EventArgs^ e)
     OpenFileDialog^ dlg = gcnew OpenFileDialog();
     if (dlg->ShowDialog() == DialogResult::OK) {
         int folderId = -1;
-        if (tree->SelectedNode && safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag)->Item1)
-            folderId = safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag)->Item2;
+        if (tree->SelectedNode) {
+            auto tag = dynamic_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
+            if (tag && tag->Item1)
+                folderId = tag->Item2;
+        }
         auto res = controller->createFile(msclr::interop::marshal_as<std::string>(dlg->FileName), folderId);
         if (!res)
             MessageBox::Show(gcnew String(res.error().c_str()));
@@ -93,8 +96,11 @@ void FileManagerForm::onAddFolder(Object^ sender, EventArgs^ e)
     String^ name = Microsoft::VisualBasic::Interaction::InputBox("Folder name", "New Folder");
     if (!String::IsNullOrWhiteSpace(name)) {
         int parentId = -1;
-        if (tree->SelectedNode && safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag)->Item1)
-            parentId = safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag)->Item2;
+        if (tree->SelectedNode) {
+            auto tag = dynamic_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
+            if (tag && tag->Item1)
+                parentId = tag->Item2;
+        }
         auto res = controller->createFolder(msclr::interop::marshal_as<std::string>(name), parentId);
         if (!res)
             MessageBox::Show(gcnew String(res.error().c_str()));
@@ -105,8 +111,8 @@ void FileManagerForm::onAddFolder(Object^ sender, EventArgs^ e)
 void FileManagerForm::onOpen(Object^ sender, EventArgs^ e)
 {
     if (!tree->SelectedNode) return;
-    auto tag = safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
-    if (!tag->Item1) {
+    auto tag = dynamic_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
+    if (tag && !tag->Item1) {
         auto files = controller->listFiles();
         if (!files) return;
         for (const auto& m : files.value()) {
@@ -121,7 +127,8 @@ void FileManagerForm::onOpen(Object^ sender, EventArgs^ e)
 void FileManagerForm::onDelete(Object^ sender, EventArgs^ e)
 {
     if (!tree->SelectedNode) return;
-    auto tag = safe_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
+    auto tag = dynamic_cast<System::Tuple<bool,int>^>(tree->SelectedNode->Tag);
+    if (!tag) return;
     if (tag->Item1) {
         controller->removeFolder(tag->Item2);
     } else {
