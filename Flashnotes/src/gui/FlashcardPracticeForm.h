@@ -3,7 +3,6 @@
 #using <System.dll>
 #using <System.Windows.Forms.dll>
 #using <System.Drawing.dll>
-
 #include <controllers/FlashcardController.hpp>
 
 using namespace System;
@@ -23,7 +22,6 @@ private:
     Button^ btnFlip;
     Button^ btnNext;
     bool showingBack;
-
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);
     void onNext(Object^ sender, EventArgs^ e);

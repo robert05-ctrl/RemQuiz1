@@ -16,6 +16,9 @@ public:
     Expected<Note> createNote(const std::string& title,
                               const std::string& body,
                               const std::filesystem::path& savePath);
+    Expected<Note> updateNote(std::uint64_t id,
+                              const std::string& title,
+                              const std::string& body);
     Expected<std::vector<Note>> listNotes() const;
     Expected<void> removeNote(std::uint64_t id);
 

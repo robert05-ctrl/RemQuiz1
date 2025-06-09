@@ -21,6 +21,19 @@ Expected<Note> NotesController::createNote(const std::string& title,
     }
 }
 
+Expected<Note> NotesController::updateNote(std::uint64_t id,
+                                           const std::string& title,
+                                           const std::string& body) {
+    if (title.empty()) {
+        return Expected<Note>("Title must not be empty");
+    }
+    try {
+        return service_->update(id, title, body);
+    } catch (const std::exception& e) {
+        return Expected<Note>(e.what());
+    }
+}
+
 Expected<std::vector<Note>> NotesController::listNotes() const {
     try {
         return service_->list();

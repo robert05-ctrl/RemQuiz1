@@ -37,6 +37,7 @@ void NoteEditorForm::onSave(Object^ sender, EventArgs^ e)
         MessageBox::Show(gcnew String(res.error().c_str()));
     else
         MessageBox::Show("Saved!");
+=======
 }
 
 } // namespace FlashnotesGUI

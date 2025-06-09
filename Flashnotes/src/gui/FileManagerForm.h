@@ -10,7 +10,6 @@ using namespace System;
 using namespace System::Windows::Forms;
 
 namespace FlashnotesGUI {
-
 public ref class FileManagerForm : public UserControl
 {
 public:

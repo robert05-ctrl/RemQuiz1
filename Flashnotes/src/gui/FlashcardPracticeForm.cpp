@@ -13,7 +13,6 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardController* ct
 {
     controller = ctrl;
     Dock = DockStyle::Fill;
-
     lblFront = gcnew Label();
     lblFront->Dock = DockStyle::Top;
     lblFront->Height = 40;
@@ -39,7 +38,6 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardController* ct
     Controls->Add(btnFlip);
     Controls->Add(lblBack);
     Controls->Add(lblFront);
-
     loadNext();
 }
 

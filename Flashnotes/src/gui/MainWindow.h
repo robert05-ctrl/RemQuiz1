@@ -13,7 +13,6 @@ using namespace System;
 using namespace System::Windows::Forms;
 
 namespace FlashnotesGUI {
-
 public ref class MainWindow : public Form
 {
 public:

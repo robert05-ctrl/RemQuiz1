@@ -15,3 +15,4 @@ int main(array<String^>^ args)
     Application::Run(gcnew FlashnotesGUI::MainWindow(&app));
     return 0;
 }
+
