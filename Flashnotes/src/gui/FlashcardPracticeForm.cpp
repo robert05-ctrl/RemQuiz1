@@ -156,6 +156,7 @@ void FlashcardPracticeForm::loadNext()
     auto& c = (*cards)[currentIndex++];
     lblFront->Text = gcnew String(c.front.c_str());
     if (typeMode) {
+        lblBack->Text = gcnew String(c.back.c_str());
         answerBox->Text = "";
         answerBox->Visible = true;
         btnCheck->Visible = true;
@@ -173,8 +174,12 @@ void FlashcardPracticeForm::loadNext()
 
 void FlashcardPracticeForm::onFlip(Object^ sender, EventArgs^ e)
 {
-    showingBack = !showingBack;
-    lblBack->Visible = showingBack;
+    if (modeBox->SelectedIndex == 1) {
+        lblBack->Visible = true;
+    } else {
+        showingBack = !showingBack;
+        lblBack->Visible = showingBack;
+    }
 }
 
 void FlashcardPracticeForm::onNext(Object^ sender, EventArgs^ e)
@@ -210,8 +215,12 @@ void FlashcardPracticeForm::onModeChanged(Object^, EventArgs^)
 {
     showingBack = false;
     currentIndex = 0;
-    if (modeBox->SelectedIndex == 1)
+    if (modeBox->SelectedIndex == 1) {
+        btnFlip->Text = "See Answer";
         sortCards();
+    } else {
+        btnFlip->Text = "Flip";
+    }
     loadNext();
 }
 
