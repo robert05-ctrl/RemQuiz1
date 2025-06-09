@@ -16,6 +16,7 @@ public ref class FlashcardPracticeForm : public UserControl
 public:
     FlashcardPracticeForm(flashnotes::FlashcardSetController* ctrl);
     ~FlashcardPracticeForm();
+    void refreshSets();
 
 private:
     flashnotes::FlashcardSetController* controller;
@@ -36,6 +37,7 @@ private:
     std::vector<flashnotes::Flashcard>* cards;
 
     void loadSets();
+    void sortCards();
     void onSelect(Object^ sender, EventArgs^ e);
     void loadNext();
     void onFlip(Object^ sender, EventArgs^ e);

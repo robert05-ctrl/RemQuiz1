@@ -86,11 +86,23 @@ FlashcardPracticeForm::FlashcardPracticeForm(flashnotes::FlashcardSetController*
     loadSets();
 }
 
+void FlashcardPracticeForm::refreshSets()
+{
+    loadSets();
+}
+
 FlashcardPracticeForm::~FlashcardPracticeForm() {
     delete cards;
     if (currentTitle) {
         delete currentTitle;
         currentTitle = nullptr;
+    }
+}
+
+void FlashcardPracticeForm::sortCards()
+{
+    if (!cards->empty()) {
+        std::sort(cards->begin(), cards->end(), compareSuccess);
     }
 }
 
@@ -123,6 +135,8 @@ void FlashcardPracticeForm::onSelect(Object^, EventArgs^)
     currentId = s.id;
     hasSet = true;
     *cards = s.cards;
+    if (modeBox->SelectedIndex == 1)
+        sortCards();
     currentIndex = 0;
     loadNext();
 }
@@ -138,9 +152,6 @@ void FlashcardPracticeForm::loadNext()
         return;
     }
     bool typeMode = modeBox->SelectedIndex == 1;
-    if (typeMode) {
-        std::sort(cards->begin(), cards->end(), compareSuccess);
-    }
     if (currentIndex >= static_cast<int>(cards->size())) currentIndex = 0;
     auto& c = (*cards)[currentIndex++];
     lblFront->Text = gcnew String(c.front.c_str());
@@ -154,6 +165,9 @@ void FlashcardPracticeForm::loadNext()
         lblBack->Text = gcnew String(c.back.c_str());
         lblBack->Visible = false;
         showingBack = false;
+        answerBox->Visible = false;
+        btnCheck->Visible = false;
+        lblResult->Visible = false;
     }
 }
 
@@ -181,14 +195,17 @@ void FlashcardPracticeForm::onCheck(Object^ sender, EventArgs^ e)
     c.successRate = (c.successRate + (correct ? 1.0 : 0.0)) / 2.0;
     if (hasSet && currentTitle) {
         controller->updateSet(currentId, *currentTitle, *cards);
-
     }
+    sortCards();
+    currentIndex = 0;
 }
 
 void FlashcardPracticeForm::onModeChanged(Object^, EventArgs^)
 {
     showingBack = false;
     currentIndex = 0;
+    if (modeBox->SelectedIndex == 1)
+        sortCards();
     loadNext();
 }
 
